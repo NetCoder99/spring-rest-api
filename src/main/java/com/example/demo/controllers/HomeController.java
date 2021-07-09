@@ -18,6 +18,9 @@ import com.example.demo.models.Customer;
 import com.example.demo.models.ErrorResponse;
 import com.example.demo.models.LocalToken;
 import com.example.demo.models.LoginFields;
+import com.example.demo.models.MovieDetails;
+import com.example.demo.models.MovieDetailsSW;
+import com.example.demo.models.MovieDetailsSW.Root;
 import com.example.demo.utilities.BillionairesRepository;
 import com.example.demo.utilities.BillionairesService;
 import com.example.demo.utilities.FileReaders;
@@ -52,7 +55,7 @@ public class HomeController<T> {
 		try {
 			System.out.println("signup apiKey:" + apiKey);
 			System.out.println("signup request:" + requestBody);
-			Thread.sleep(2000);
+			Thread.sleep(1000);
 			LoginFields loginFields = JSONUtilities.getLoginFields(requestBody);
 
 			if (loginFields.getPassWord().length() < 2)
@@ -77,7 +80,16 @@ public class HomeController<T> {
 	@SuppressWarnings({ "unchecked" })
 	public List<Customer> getData() throws Exception {
 		String jsonString = FileReaders.getResourceFileAsString("data/MOCK_DATA.json");
-		return (List<Customer>) (List<?>) new JSONUtilities<>().GetFromJsonList(jsonString, Customer.class); 
+		return (List<Customer>) (List<?>) new JSONUtilities<>().GetListFromJson(jsonString, Customer.class); 
+	}
+
+	@GetMapping("/getMovies")
+	public MovieDetailsSW.Root getMovies() throws Exception {
+		//String jsonString = FileReaders.getResourceFileAsString("data/movies.json");
+		//return (List<MovieDetails>) (List<?>) new JSONUtilities<>().GetFromJsonList(jsonString, MovieDetails.class); 
+		String jsonString = FileReaders.getResourceFileAsString("data/moviesSW.json");
+		Object rtnObj = new JSONUtilities<MovieDetailsSW.Root>().GetObjFromJson(jsonString, MovieDetailsSW.Root.class);
+		return null;
 	}
 
 	@GetMapping("/getBillionaires")

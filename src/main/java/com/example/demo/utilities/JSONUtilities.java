@@ -10,7 +10,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class JSONUtilities<T> {
 
 	@SuppressWarnings({ "rawtypes" })
-	public List<T> GetFromJsonList(String jsonString,  Class inpClazz) throws Exception
+	public Object GetObjFromJson(String jsonString,  Class inpClazz) throws Exception
+	{
+		ObjectMapper objectMapper = new ObjectMapper();
+		Object rtnObj = objectMapper.readValue(jsonString, new TypeReference<T>(){});
+		return rtnObj;
+	}
+
+	public List<T> GetListFromJson(String jsonString,  Class inpClazz) throws Exception
 	{
 		ObjectMapper objectMapper = new ObjectMapper();
 		List<T> rtnList = objectMapper.readValue(jsonString, new TypeReference<List<T>>(){});
