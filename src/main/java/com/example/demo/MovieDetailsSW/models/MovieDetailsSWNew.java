@@ -1,34 +1,21 @@
-package com.example.demo.models;
+package com.example.demo.MovieDetailsSW.models;
 
-public class MovieDetails {
-
-    private int id;
+public class MovieDetailsSWNew {
     private String title;
     private String openingText;
     private String releaseDate;
-
-    public MovieDetails() { }
-	
-    public MovieDetails(int id, String title, String openingText, String releaseDate) {
+    
+    public MovieDetailsSWNew() {}
+    
+	public MovieDetailsSWNew(String title, String openingText, String releaseDate) {
 		super();
-		this.id = id;
 		this.title = title;
 		this.openingText = openingText;
 		this.releaseDate = releaseDate;
 	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public String getTitle() {
 		return title;
 	}
-
 	public void setTitle(String title) {
 		this.title = title;
 	}
@@ -48,4 +35,5 @@ public class MovieDetails {
 	public void setReleaseDate(String releaseDate) {
 		this.releaseDate = releaseDate;
 	}
+
 }

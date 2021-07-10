@@ -1,7 +1,10 @@
 package com.example.demo.utilities;
 
+<<<<<<< HEAD
 package com.optum.claims.claims_master_controller.classes;
 
+=======
+>>>>>>> d49bd35 (save addMovie function)
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+<<<<<<< HEAD
 import com.fasterxml.jackson.dataformat.avro.AvroFactory;
 import com.fasterxml.jackson.dataformat.avro.AvroSchema;
 import com.fasterxml.jackson.dataformat.avro.schema.AvroSchemaGenerator;
@@ -23,6 +27,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.optum.claims.claims_master_controller.mappers.TimeStampDeserializer;
 import com.optum.claims.claims_master_controller.models.AgendaGroupDefs;
 import com.optum.claims.claims_master_controller.models.ArtifactDetails;
+=======
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+>>>>>>> d49bd35 (save addMovie function)
 
 public class JsonUtilities<T> {
 
@@ -34,6 +42,7 @@ public class JsonUtilities<T> {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         return objectMapper.writeValueAsString(claim);
 	}	
+<<<<<<< HEAD
 
 	public Object CreateFromJsonObj(String request, Class<T> clazz) throws Exception
 	{
@@ -76,6 +85,43 @@ public class JsonUtilities<T> {
 	    List<AgendaGroupDefs> rtnList = objectReader.readValue(new File("src/main/resources/AgendaGroups.yml"));
 	    return rtnList;
 	}
+=======
+
+	public Object CreateObjFromJson(String request, Class<T> clazz) throws Exception
+	{
+		final ObjectMapper objectMapper = GetJsonMapper();
+		T tObj = clazz.getDeclaredConstructor().newInstance();
+		JavaType type = objectMapper.getTypeFactory().constructType(tObj.getClass());
+
+		//SimpleModule module = new SimpleModule();
+		//module.addDeserializer(LocalDateTime.class, new TimeStampDeserializer());
+		//objectMapper.registerModule(module);
+		
+		tObj = objectMapper.readValue(request, type);    
+	    return tObj;
+	}
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+	public List<T> CreateListFromJson(String request, Class<T> clazz) throws Exception
+	{
+		final ObjectMapper objectMapper = GetJsonMapper();
+		T tObj = clazz.getDeclaredConstructor().newInstance();
+		JavaType type = objectMapper.getTypeFactory().constructCollectionType(List.class, tObj.getClass());
+	    List<T> tmpList = objectMapper.readValue(request, type);    
+	    return tmpList;
+	}	
+	
+//	public static String CreateAvroFromPojo(Class<?> clazz) throws Exception
+//	{
+//		ObjectMapper objectMapper = new ObjectMapper(new AvroFactory());
+//		AvroSchemaGenerator gen = new AvroSchemaGenerator();
+//		objectMapper.acceptJsonFormatVisitor(clazz, gen);
+//		AvroSchema schemaWrapper = gen.getGeneratedSchema();
+//		org.apache.avro.Schema avroSchema = schemaWrapper.getAvroSchema();
+//		return avroSchema.toString(true);
+//	}
+
+>>>>>>> d49bd35 (save addMovie function)
 	
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 	public static ObjectMapper GetJsonMapper()

@@ -13,14 +13,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.MovieDetailsSW.models.MovieDetailsSWNew;
+import com.example.demo.MovieDetailsSW.models.MovieDetailsSWRoot;
+import com.example.demo.MovieDetailsSW.utilities.MoviesSWService;
 import com.example.demo.models.Billionaires;
 import com.example.demo.models.Customer;
 import com.example.demo.models.ErrorResponse;
 import com.example.demo.models.LocalToken;
 import com.example.demo.models.LoginFields;
-import com.example.demo.models.MovieDetails;
-import com.example.demo.models.MovieDetailsSW;
-import com.example.demo.models.MovieDetailsSW.Root;
+
+
 import com.example.demo.utilities.BillionairesRepository;
 import com.example.demo.utilities.BillionairesService;
 import com.example.demo.utilities.FileReaders;
@@ -31,6 +33,7 @@ import com.example.demo.utilities.JSONUtilities;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class HomeController<T> {
 	@Autowired BillionairesService billionairesService; 	
+	@Autowired MoviesSWService     moviesSWService; 	
 	
 	@RequestMapping(value="/version", method = { RequestMethod.GET, RequestMethod.POST })
 	public String version() {
@@ -45,7 +48,7 @@ public class HomeController<T> {
 		System.out.println("login apiKey:" + apiKey);
 		System.out.println("login request:" + requestBody);
 		Thread.sleep(1000);
-		LoginFields loginFields = JSONUtilities.getLoginFields(requestBody);
+		LoginFields loginFields = (LoginFields) new JSONUtilities<LoginFields>().CreateObjFromJson(requestBody, LoginFields.class);
 		return (ResponseEntity<T>) new ResponseEntity<LocalToken>(new LocalToken("Test3456"), HttpStatus.OK);
 	}
 
@@ -56,7 +59,8 @@ public class HomeController<T> {
 			System.out.println("signup apiKey:" + apiKey);
 			System.out.println("signup request:" + requestBody);
 			Thread.sleep(1000);
-			LoginFields loginFields = JSONUtilities.getLoginFields(requestBody);
+			LoginFields loginFields = (LoginFields) new JSONUtilities<LoginFields>().CreateObjFromJson(requestBody, LoginFields.class);
+			//LoginFields loginFields = JSONUtilities.getLoginFields(requestBody);
 
 			if (loginFields.getPassWord().length() < 2)
 			{ throw new Exception("Very weak password:"); }
@@ -80,16 +84,65 @@ public class HomeController<T> {
 	@SuppressWarnings({ "unchecked" })
 	public List<Customer> getData() throws Exception {
 		String jsonString = FileReaders.getResourceFileAsString("data/MOCK_DATA.json");
-		return (List<Customer>) (List<?>) new JSONUtilities<>().GetListFromJson(jsonString, Customer.class); 
+		return (List<Customer>) (List<?>) new JSONUtilities<Customer>().CreateListFromJson(jsonString, Customer.class); 
 	}
 
+	@SuppressWarnings("unchecked")
 	@GetMapping("/getMovies")
-	public MovieDetailsSW.Root getMovies() throws Exception {
-		//String jsonString = FileReaders.getResourceFileAsString("data/movies.json");
-		//return (List<MovieDetails>) (List<?>) new JSONUtilities<>().GetFromJsonList(jsonString, MovieDetails.class); 
-		String jsonString = FileReaders.getResourceFileAsString("data/moviesSW.json");
-		Object rtnObj = new JSONUtilities<MovieDetailsSW.Root>().GetObjFromJson(jsonString, MovieDetailsSW.Root.class);
-		return null;
+	public ResponseEntity<T> getMovies() throws Exception {
+		try {
+			//throw new Exception("Test Exception in getMovies");
+			Thread.sleep(500);
+			//String jsonString = FileReaders.getResourceFileAsString("data/moviesSW.json");
+			//MovieDetailsSWRoot rtnObj = (MovieDetailsSWRoot) new JSONUtilities<MovieDetailsSWRoot>().CreateObjFromJson(jsonString, MovieDetailsSWRoot.class);
+
+			//moviesSWService.loadInitMovies(rtnObj);
+			MovieDetailsSWRoot rtnObj2 = moviesSWService.getMovies();
+			if (rtnObj2 == null) {
+				String jsonString = FileReaders.getResourceFileAsString("data/moviesSW.json");
+				MovieDetailsSWRoot tmpObj = (MovieDetailsSWRoot) new JSONUtilities<MovieDetailsSWRoot>().CreateObjFromJson(jsonString, MovieDetailsSWRoot.class);				
+				moviesSWService.loadInitMovies(tmpObj);
+			}
+			rtnObj2 = moviesSWService.getMovies();
+			return (ResponseEntity<T>) new ResponseEntity<MovieDetailsSWRoot>(rtnObj2, HttpStatus.OK);
+		}
+		catch(Exception ex) {
+			System.out.println("getMovies.failed:" + ex.getLocalizedMessage());
+			ex.printStackTrace();
+			return (ResponseEntity<T>) new ResponseEntity<ErrorResponse>(new ErrorResponse(1, ex.getLocalizedMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@GetMapping("/delMovies")
+	public ResponseEntity<T> delMovies() throws Exception {
+		try {
+			int movieCount = moviesSWService.delMovies();
+			return (ResponseEntity<T>) new ResponseEntity<String>(movieCount + " movies were deleted.", HttpStatus.OK);
+		}
+		catch(Exception ex) {
+			System.out.println("getMovies.failed:" + ex.getLocalizedMessage());
+			ex.printStackTrace();
+			return (ResponseEntity<T>) new ResponseEntity<ErrorResponse>(new ErrorResponse(1, ex.getLocalizedMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/addMovie", method = { RequestMethod.POST })
+	public ResponseEntity<T> addMovie(@RequestBody String requestBody) throws Exception {
+		try {
+			//throw new Exception("Add movie function not implemented");
+		
+			MovieDetailsSWNew tmpObj = (MovieDetailsSWNew) new JSONUtilities<MovieDetailsSWNew>().CreateObjFromJson(requestBody, MovieDetailsSWNew.class);				
+			moviesSWService.addMovie(tmpObj);
+			return (ResponseEntity<T>) new ResponseEntity<String>("Movie was added", HttpStatus.OK);
+
+		}
+		catch(Exception ex) {
+			System.out.println("getMovies.failed:" + ex.getLocalizedMessage());
+			ex.printStackTrace();
+			return (ResponseEntity<T>) new ResponseEntity<ErrorResponse>(new ErrorResponse(1, ex.getLocalizedMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@GetMapping("/getBillionaires")
