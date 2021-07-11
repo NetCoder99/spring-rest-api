@@ -93,10 +93,6 @@ public class HomeController<T> {
 		try {
 			//throw new Exception("Test Exception in getMovies");
 			Thread.sleep(500);
-			//String jsonString = FileReaders.getResourceFileAsString("data/moviesSW.json");
-			//MovieDetailsSWRoot rtnObj = (MovieDetailsSWRoot) new JSONUtilities<MovieDetailsSWRoot>().CreateObjFromJson(jsonString, MovieDetailsSWRoot.class);
-
-			//moviesSWService.loadInitMovies(rtnObj);
 			MovieDetailsSWRoot rtnObj2 = moviesSWService.getMovies();
 			if (rtnObj2 == null) {
 				String jsonString = FileReaders.getResourceFileAsString("data/moviesSW.json");
