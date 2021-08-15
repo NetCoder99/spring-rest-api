@@ -1,6 +1,7 @@
 package com.example.demo.controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,7 @@ public class HomeController<T> {
 	
 	@RequestMapping(value="/version", method = { RequestMethod.GET, RequestMethod.POST })
 	public String version() {
-		String version = "Version: 1.0.1::" + verCounter++;
+		String version = "Version: 1.0.2::" + verCounter++;
 		System.out.println("version:" + version);
 		return version;
 	}
@@ -49,7 +50,7 @@ public class HomeController<T> {
 	public String version2(
 			@RequestHeader(required = true, defaultValue = "test") String apiKey			
 		) {
-		String version = "Version: 1.0.1::" + verCounter++ + "::" + apiKey;
+		String version = "Version: 1.0.2::" + verCounter++ + "::" + apiKey;
 		System.out.println("version:" + version);
 		return version;
 	}
@@ -64,11 +65,10 @@ public class HomeController<T> {
 		try {
 			System.out.println("login apiKey:" + headerKey);
 			//System.out.println("login request:" + requestBody);
-			Thread.sleep(1500);
+			Thread.sleep(500);
 			LoginFields loginFields = (LoginFields) new JSONUtilities<LoginFields>().CreateObjFromJson(requestBody, LoginFields.class);
 			if (!loginFields.getUserName().contentEquals(headerKey)) {
 				return (ResponseEntity<T>) new ResponseEntity<ErrorResponse>(new ErrorResponse(1, "Invalid User Name"), HttpStatus.BAD_REQUEST);
-			//	//throw new Exception("Invalid User Name.");
 			}
 			return (ResponseEntity<T>) new ResponseEntity<LocalToken>(new LocalToken("Test3456:"+verCounter++), HttpStatus.OK);
 		}
@@ -129,11 +129,25 @@ public class HomeController<T> {
 		}
 	}
 
-	@GetMapping("/getData")
+	@GetMapping("/getCustomers")
 	@SuppressWarnings({ "unchecked" })
-	public List<Customer> getData() throws Exception {
+	public List<Customer> getCustomers(
+			@RequestBody(required = false) String requestBody, 
+			@RequestHeader(required = true, defaultValue = "") String headerKey			
+			) throws Exception {
+		Thread.sleep(1000);
 		String jsonString = FileReaders.getResourceFileAsString("data/MOCK_DATA.json");
-		return (List<Customer>) (List<?>) new JSONUtilities<Customer>().CreateListFromJson(jsonString, Customer.class); 
+		
+		List<Customer> rtnList = (List<Customer>) (List<?>) new JSONUtilities<Customer>().CreateListFromJson(jsonString, Customer.class);
+		
+		if (headerKey != null && !headerKey.isEmpty()) {
+			return rtnList.stream()
+				.filter(f -> f.getFirst_name().toLowerCase().startsWith(headerKey.toLowerCase()))
+				.collect(Collectors.toList());
+		}
+		else {
+			return rtnList;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
