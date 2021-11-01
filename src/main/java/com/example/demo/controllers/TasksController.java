@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.MovieDetailsSW.models.MovieDetailsSWNew;
 import com.example.demo.Tasks.models.TaskDefinition;
 import com.example.demo.Tasks.utilities.TasksService;
 import com.example.demo.models.ErrorResponse;

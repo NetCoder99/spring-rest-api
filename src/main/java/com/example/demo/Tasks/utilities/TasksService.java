@@ -6,9 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.MovieDetailsSW.models.MovieDetailsSWNew;
-import com.example.demo.MovieDetailsSW.models.MovieDetailsSWResult;
-import com.example.demo.MovieDetailsSW.models.MovieDetailsSWRoot;
 import com.example.demo.Tasks.models.TaskDefinition;
 
 @Service
