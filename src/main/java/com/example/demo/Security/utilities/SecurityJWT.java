@@ -33,9 +33,9 @@ public class SecurityJWT {
 	
 	public static Map<String, String> getClaims() {
 		HashMap<String, String> rtnMap = new HashMap<>();
-		rtnMap.put("admin", "admin");
-		rtnMap.put("user1", "user1");
-		rtnMap.put("batch", "batch");
+		rtnMap.put("role", "admin");
+		rtnMap.put("role", "user1");
+		rtnMap.put("role", "batch");
 		return rtnMap;
 		
 	}

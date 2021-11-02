@@ -202,7 +202,7 @@ public class HomeController<T> {
 			return (ResponseEntity<T>) new ResponseEntity<List<QuoteDef>>(rtnList, HttpStatus.OK);
 		}
 		catch(Exception ex) {
-			System.out.println("getMovies.failed:" + ex.getLocalizedMessage());
+			System.out.println("getQuotes.failed:" + ex.getLocalizedMessage());
 			ex.printStackTrace();
 			return (ResponseEntity<T>) new ResponseEntity<ErrorResponse>(new ErrorResponse(1, ex.getLocalizedMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
