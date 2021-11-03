@@ -1,4 +1,4 @@
-package com.example.demo.Quoyes.models;
+package com.example.demo.Quotes.models;
 
 public class QuoteDef {
 	private String id;

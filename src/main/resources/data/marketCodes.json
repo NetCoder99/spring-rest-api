@@ -1,0 +1,37 @@
+[
+    {
+      "recordId": 1,
+      "marketCd": "AZ",
+      "warningNo": "8001"
+    },
+    {
+      "recordId": 2,
+      "marketCd": "CA",
+      "warningNo": "8002"
+    },
+    {
+      "recordId": 3,
+      "marketCd": "HI",
+      "warningNo": "8005"
+    },
+    {
+      "recordId": 4,
+      "marketCd": "TX-ALL",
+      "warningNo": "8028"
+    },
+    {
+      "recordId": 5,
+      "marketCd": "TX-SNF",
+      "warningNo": "8020"
+    },
+    {
+      "recordId": 6,
+      "marketCd": "MI",
+      "warningNo": "8012"
+    },
+    {
+      "recordId": 7,
+      "marketCd": "FL",
+      "warningNo": "8005"
+    }
+  ]

@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.MarketCodes.MarketCodesService;
 import com.example.demo.MovieDetailsSW.models.MovieDetailsSWNew;
 import com.example.demo.MovieDetailsSW.models.MovieDetailsSWRoot;
 import com.example.demo.MovieDetailsSW.utilities.MoviesSWService;
-import com.example.demo.Quoyes.models.QuoteDef;
+import com.example.demo.Quotes.models.QuoteDef;
 import com.example.demo.Security.models.LocalToken;
 import com.example.demo.Security.models.LoginFields;
 import com.example.demo.Security.utilities.SecurityJWT;
@@ -38,6 +39,7 @@ import com.example.demo.utilities.JSONUtilities;
 public class HomeController<T> {
 	@Autowired BillionairesService billionairesService; 	
 	@Autowired MoviesSWService     moviesSWService; 	
+	@Autowired MarketCodesService  marketCodesService;
 	
 	private int verCounter = 0;
 	
@@ -246,4 +248,23 @@ public class HomeController<T> {
 		List<Billionaires> rtnList = billionairesService.getAllBillionaires();
 		return rtnList;
 	}
+
+
+	@SuppressWarnings("unchecked")
+	@GetMapping("/getMarketCodes")
+	public ResponseEntity<T> getMarketCodes() throws Exception {
+		try {
+			//throw new Exception("Test Exception in getMovies");
+			marketCodesService.getMarketCodes();
+			Thread.sleep(250);
+			return (ResponseEntity<T>) new ResponseEntity<>(marketCodesService.getMarketCodes(), HttpStatus.OK);
+		}
+		catch(Exception ex) {
+			System.out.println("getMovies.failed:" + ex.getLocalizedMessage());
+			ex.printStackTrace();
+			return (ResponseEntity<T>) new ResponseEntity<ErrorResponse>(new ErrorResponse(1, ex.getLocalizedMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+
 }
